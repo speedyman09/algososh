@@ -1,0 +1,30 @@
+.main {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    max-width: 1000px;
+    margin: auto;
+    gap: 50px;
+    align-items: center;
+}
+
+.flex {
+    display: flex;
+    gap: 12px;
+}
+
+.columns {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    margin-top: 48px;
+    align-items: flex-end;
+    height: 340px;
+}
+
+.column {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style-type: none;
+    padding-left: 10px;
+}

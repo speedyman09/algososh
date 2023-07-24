@@ -1,0 +1,33 @@
+.stringbox {
+    margin: auto;
+    max-width: 570px;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.input {
+    width: 377px;
+    margin-right: 12px;
+}
+
+.inputbox {
+    display: flex;
+}
+
+.circles {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    margin-top: 140px;
+}
+
+.circle {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style-type: none;
+    padding-left: 10px;
+}
