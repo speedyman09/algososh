@@ -11,8 +11,9 @@ import styles from "./fibonacci-page.module.css";
 export const FibonacciPage: React.FC = () => {
   const [valueInput, setValueInput] = useState<number | string>("");
   const [arrayFibonacci, setArrayFibonacci] = useState<Array<number>>([]);
-
+  const [loading, setLoading] = useState(false);
   const changeArrayFibonacci = (number: number) => {
+    setLoading(true)
     let arr = fibonacciNumbers(number);
 
     let i = 0;
@@ -26,8 +27,10 @@ export const FibonacciPage: React.FC = () => {
         i++;
       } else {
         clearInterval(interval);
+        setLoading(false);
       }
-    }, 500);
+    }, 500)
+    
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,10 +39,11 @@ export const FibonacciPage: React.FC = () => {
 
   const clickButton = () => {
     const numberInput = Number(valueInput);
-
+    setLoading(true);
     setValueInput("");
 
     setTimeout(() => changeArrayFibonacci(numberInput), 500);
+    
   };
   return (
     <SolutionLayout title="Последовательность Фибоначчи">
@@ -53,6 +57,7 @@ export const FibonacciPage: React.FC = () => {
             type="submit"
             onClick={clickButton}
             disabled={valueInput === "" || valueInput > 19}
+            isLoader={loading}
           />
         </div>
         Максимальное число — 19
