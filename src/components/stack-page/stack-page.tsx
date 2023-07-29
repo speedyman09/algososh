@@ -12,12 +12,15 @@ import { TArray } from "./utils";
 export const StackPage: React.FC = () => {
   const [valueInput, setValueInput] = useState<string>("");
   const [array, setArray] = useState<TArray[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [Addloading, setAddLoading] = useState(false);
+  const [DelLoading, setDelLoading] = useState(false);
+  const [ClearLoading, setClearLoading] = useState(false);
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValueInput(e.currentTarget.value);
   };
 
   const clickButtonAdd = () => {
+    setAddLoading(true);
     const arr = array.concat();
     arr.push({
       value: valueInput,
@@ -35,14 +38,15 @@ export const StackPage: React.FC = () => {
       newArr[n].color = ElementStates.Default;
 
       setArray(newArr);
+      setAddLoading(false);
     }, 500);
 
     setValueInput("");
 
-   
   };
 
   const clickButtonDel = () => {
+    setDelLoading(true);
     const arr = array.concat();
     const n = arr.length - 1;
 
@@ -54,11 +58,14 @@ export const StackPage: React.FC = () => {
       const newArr = arr.concat();
       newArr.pop();
       setArray(newArr);
+      setDelLoading(false);
     }, 500);
   };
 
   const clickButtonClear = () => {
+    setClearLoading(true)
     setArray([]);
+    setClearLoading(false);
   };
 
   return (
@@ -66,8 +73,7 @@ export const StackPage: React.FC = () => {
       <div className={styles.stringbox}>
         <div className={styles.inputbox}>
           <div className={styles.input}>
-            <Input max={11} onChange={onChange} value={valueInput}></Input>
-            <p className={styles.maxText}>Максимум 4 символа</p>
+            <Input max={11} onChange={onChange} value={valueInput} isLimitText maxLength={4}></Input>
           </div>
           <div>
             <Button
@@ -75,6 +81,7 @@ export const StackPage: React.FC = () => {
               type="submit"
               onClick={clickButtonAdd}
               disabled={valueInput === "" || valueInput.length > 4}
+              isLoader={Addloading}
             />
           </div>{" "}
           <div className={styles.btnDelete}>
@@ -83,6 +90,7 @@ export const StackPage: React.FC = () => {
               type="submit"
               onClick={clickButtonDel}
               disabled={array.length == 0}
+              isLoader={DelLoading}
             />
           </div>{" "}
           <div>
@@ -91,6 +99,7 @@ export const StackPage: React.FC = () => {
               type="submit"
               onClick={clickButtonClear}
               disabled={array.length == 0}
+              isLoader={ClearLoading}
             />
           </div>
         </div>

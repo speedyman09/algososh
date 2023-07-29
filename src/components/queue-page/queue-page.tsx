@@ -8,6 +8,7 @@ import Queue from "./queue-class";
 
 import styles from "./queue.module.css";
 import { initialArr, TArray } from "./utils";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 export const QueuePage: React.FC = () => {
   const queue = useMemo(() => new Queue<string>(), []);
@@ -49,7 +50,7 @@ export const QueuePage: React.FC = () => {
       array[tail.index].color = ElementStates.Default;
       setArray(array);
       setAddLoading(false);
-    }, 500);
+    }, SHORT_DELAY_IN_MS);
   };
 
   const clickButtonDel = () => {
@@ -59,6 +60,9 @@ export const QueuePage: React.FC = () => {
     const tail = queue.getTail();
     if (head.index === tail.index) {
       clickButtonClear();
+      setTimeout(() => {
+        setDeleteLoading(false)
+      }, SHORT_DELAY_IN_MS)
     } else {
       queue.dequeue();
       const head = queue.getHead();
@@ -78,7 +82,7 @@ export const QueuePage: React.FC = () => {
         array[head.index].head = "head";
         setArray(array);
         setDeleteLoading(false);
-      }, 500);
+      }, SHORT_DELAY_IN_MS);
     }
   };
 
