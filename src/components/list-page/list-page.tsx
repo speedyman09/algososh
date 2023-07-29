@@ -16,6 +16,12 @@ export const ListPage: React.FC = () => {
 
   const [valueInput, setValueInput] = useState<any>("");
   const [indexInput, setIndexInput] = useState<any>("");
+  const [TailLoading, setTailLoading] = useState(false);
+  const [HeadLoading, setHeadLoading] = useState(false);
+  const [DeleteTailLoading, setDeleteTailLoading] = useState(false);
+  const [DeleteHeadLoading, setDeleteHeadLoading] = useState(false);
+  const [addByIndexLoading, setAddByIndexLoading] = useState(false);
+  const [deleteByIndexLoading, setdeleteByIndexLoading] = useState(false);
 
   const [indexUpCircle, setIndexUpCircle] = useState<number | null>(null);
   const [indexDownCircle, setIndexDownCircle] = useState<TDownCircle>({
@@ -35,6 +41,7 @@ export const ListPage: React.FC = () => {
 
 
   const clickButtonAddToHead = () => {
+    setHeadLoading(true);
     setValueInput("");
 
     setIndexUpCircle(0);
@@ -58,10 +65,12 @@ export const ListPage: React.FC = () => {
       const array = [...newArray];
       array[0].color = ElementStates.Default;
       setArray(array);
+      setHeadLoading(false);
     }, 500);
   };
 
   const clickButtonAddToTail = () => {
+    setTailLoading(true);
     setValueInput("");
     const newArray = array.concat();
 
@@ -85,10 +94,12 @@ export const ListPage: React.FC = () => {
 
       array[array.length - 1].color = ElementStates.Default;
       setArray(array);
+      setTailLoading(false)
     }, 500);
   };
 
   const clickButtonDelHead = () => {
+    setDeleteHeadLoading(true);
     const newArray = array.concat();
     const downCircle = {
       value: newArray[0].value,
@@ -115,10 +126,12 @@ export const ListPage: React.FC = () => {
       array.shift();
 
       setArray(array);
+      setDeleteHeadLoading(false);
     }, 500);
   };
 
   const clickButtonDelTail = () => {
+    setDeleteTailLoading(true)
     const newArray = array.concat();
 
     const downCircle = {
@@ -146,10 +159,12 @@ export const ListPage: React.FC = () => {
       array.pop();
 
       setArray(array);
+      setDeleteTailLoading(false);
     }, 500);
   };
 
   const clickButtonAddByIndex = () => {
+    setAddByIndexLoading(true)
     const newArray = array.concat();
 
     setIndexUpCircle(indexInput);
@@ -174,9 +189,11 @@ export const ListPage: React.FC = () => {
     }, 500);
     setValueInput("");
     setIndexInput("");
+    setAddByIndexLoading(false)
   };
 
   const clickButtonDelByIndex = () => {
+    setdeleteByIndexLoading(true);
     const newArray = array.concat();
 
     const downCircle = {
@@ -208,6 +225,7 @@ export const ListPage: React.FC = () => {
     }, 500);
 
     setIndexInput("");
+    setdeleteByIndexLoading(false);
   };
 
   return (
@@ -230,6 +248,7 @@ export const ListPage: React.FC = () => {
                 type="submit"
                 onClick={clickButtonAddToHead}
                 disabled={valueInput.length > 4 || valueInput == ""}
+                isLoader={HeadLoading}
               />
             </div>
             <div className={styles.btn}>
@@ -238,6 +257,7 @@ export const ListPage: React.FC = () => {
                 type="submit"
                 onClick={clickButtonAddToTail}
                 disabled={valueInput.length > 4 || valueInput == ""}
+                isLoader={TailLoading}
               />
             </div>
             <div className={styles.btn}>
@@ -246,6 +266,7 @@ export const ListPage: React.FC = () => {
                 type="submit"
                 onClick={clickButtonDelHead}
                 disabled={array.length == 0}
+                isLoader={DeleteHeadLoading}
               />
             </div>
             <div>
@@ -254,6 +275,7 @@ export const ListPage: React.FC = () => {
                 type="submit"
                 onClick={clickButtonDelTail}
                 disabled={array.length == 0}
+                isLoader={DeleteTailLoading}
               />
             </div>{" "}
           </div>
@@ -281,6 +303,7 @@ export const ListPage: React.FC = () => {
                   indexInput == ""
                 }
                 extraClass={styles.buttonWidth}
+                isLoader={addByIndexLoading}
               />
             </div>
             <div className={styles.btnBig}>
@@ -290,6 +313,7 @@ export const ListPage: React.FC = () => {
                 onClick={clickButtonDelByIndex}
                 disabled={indexInput == "" || indexInput > array.length-1}
                 extraClass={styles.buttonWidth}
+                isLoader={deleteByIndexLoading}
               />
             </div>
           </div>

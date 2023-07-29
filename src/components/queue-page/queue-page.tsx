@@ -14,12 +14,15 @@ export const QueuePage: React.FC = () => {
 
   const [valueInput, setValueInput] = useState<string>("");
   const [array, setArray] = useState<TArray[]>(initialArr);
-
+  const [AddLoading, setAddLoading] = useState(false);
+  const [DeleteLoading, setDeleteLoading] = useState(false);
+  const [ClearLoading, setClearLoading] = useState(false);
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValueInput(e.currentTarget.value);
   };
 
   const clickButtonAdd = () => {
+    setAddLoading(true);
     setValueInput("");
 
     const newArray = array.concat();
@@ -45,10 +48,12 @@ export const QueuePage: React.FC = () => {
       const array = [...newArray];
       array[tail.index].color = ElementStates.Default;
       setArray(array);
+      setAddLoading(false);
     }, 500);
   };
 
   const clickButtonDel = () => {
+    setDeleteLoading(true);
     const newArray = [...array];
     const head = queue.getHead();
     const tail = queue.getTail();
@@ -72,11 +77,13 @@ export const QueuePage: React.FC = () => {
         array[head.index].value = head.value;
         array[head.index].head = "head";
         setArray(array);
+        setDeleteLoading(false);
       }, 500);
     }
   };
 
   const clickButtonClear = () => {
+    setClearLoading(true);
     queue.clear();
 
     setArray(
@@ -85,6 +92,7 @@ export const QueuePage: React.FC = () => {
         color: ElementStates.Default,
       }))
     );
+    setClearLoading(false);
   };
 
   return (
@@ -105,6 +113,7 @@ export const QueuePage: React.FC = () => {
                 array[6].tail == "tail" ||
                 valueInput.length > 4
               }
+              isLoader={AddLoading}
             />
           </div>{" "}
           <div className={styles.btnDelete}>
@@ -113,6 +122,7 @@ export const QueuePage: React.FC = () => {
               type="submit"
               onClick={clickButtonDel}
               disabled={array.length == 0}
+              isLoader={DeleteLoading}
             />
           </div>
           <div>
@@ -121,6 +131,7 @@ export const QueuePage: React.FC = () => {
               type="submit"
               onClick={clickButtonClear}
               disabled={array.length == 0}
+              isLoader={ClearLoading}
             />
           </div>
         </div>

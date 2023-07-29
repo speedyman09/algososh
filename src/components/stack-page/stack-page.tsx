@@ -12,7 +12,7 @@ import { TArray } from "./utils";
 export const StackPage: React.FC = () => {
   const [valueInput, setValueInput] = useState<string>("");
   const [array, setArray] = useState<TArray[]>([]);
-
+  const [loading, setLoading] = useState(false);
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValueInput(e.currentTarget.value);
   };

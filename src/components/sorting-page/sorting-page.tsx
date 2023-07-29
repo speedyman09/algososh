@@ -13,7 +13,8 @@ export const SortingPage: React.FC = () => {
   const [methodSorting, setMethodSorting] = useState("selection");
 
   const [array, setArray] = useState<Array<TArray>>(randomArr);
-
+  const [downLoading, setDownLoading] = useState(false);
+  const [upLoading, setUpLoading] = useState(false);
   const bubbleSort = (direction: boolean) => {
     let i = 0;
     let j = 0;
@@ -64,12 +65,14 @@ export const SortingPage: React.FC = () => {
 
               setArray(newArr);
               clearInterval(interval);
-            }, 300);
+              setUpLoading(false);
+              setDownLoading(false);
+            }, 100);
           }
         }
-      }, 500);
+      }, 100);
       document.addEventListener("click", () => clearInterval(interval));
-    }, 500);
+    }, 100);
   };
 
   const selectionSort = (direction: boolean) => {
@@ -119,14 +122,17 @@ export const SortingPage: React.FC = () => {
         if (i >= newArr.length - 1) {
           newArr[i].color = ElementStates.Modified;
           clearInterval(interval);
+          setUpLoading(false);
+          setDownLoading(false);
         }
       }
       setArray(newArr);
       document.addEventListener("click", () => clearInterval(interval));
-    }, 500);
+    }, 100);
   };
 
   const clickButtonUp = () => {
+    setUpLoading(true);
     if (methodSorting == "bubble") {
       bubbleSort(true);
     } else {
@@ -135,6 +141,7 @@ export const SortingPage: React.FC = () => {
   };
 
   const clickButtonDown = () => {
+    setDownLoading(true);
     if (methodSorting == "bubble") {
       bubbleSort(false);
     } else {
@@ -164,6 +171,7 @@ export const SortingPage: React.FC = () => {
             onClick={clickButtonUp}
             sorting={Direction.Ascending}
             disabled={array.length == 0}
+            isLoader={upLoading}
           />
 
           <Button
@@ -172,6 +180,7 @@ export const SortingPage: React.FC = () => {
             onClick={clickButtonDown}
             sorting={Direction.Descending}
             disabled={array.length == 0}
+            isLoader={downLoading}
           />
         </div>
         <div>

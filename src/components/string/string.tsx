@@ -11,7 +11,7 @@ import { TArray } from "./utils";
 export const StringComponent: React.FC = () => {
   const [valueInput, setValueInput] = useState("");
   const [arrayLetters, setArrayLetters] = useState<Array<TArray>>([]);
-
+  const [loading, setLoading] = useState(false);
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValueInput(e.currentTarget.value);
   };
@@ -36,6 +36,7 @@ export const StringComponent: React.FC = () => {
           changeColor(arr, i, ElementStates.Changing);
         } else {
           clearInterval(interval);
+          setLoading(false);
         }
       }, 1000);
     } else {
@@ -55,6 +56,7 @@ export const StringComponent: React.FC = () => {
           changeColor(arr, i, ElementStates.Changing);
         } else {
           clearInterval(interval);
+          setLoading(false);
         }
 
 
@@ -74,6 +76,7 @@ export const StringComponent: React.FC = () => {
   };
 
   const clickButton = () => {
+    setLoading(true);
     const arr = valueInput
       .split("")
       .map((value) => ({ value, color: ElementStates.Default }));
@@ -97,6 +100,7 @@ export const StringComponent: React.FC = () => {
             type="submit"
             onClick={clickButton}
             disabled={valueInput === "" || valueInput.length > 11}
+            isLoader={loading}
           />
         </div>
         Максимум 11 символов
