@@ -8,11 +8,11 @@ import { StringComponent } from "../string/string";
 import { SortingPage } from "../sorting-page/sorting-page";
 import { StackPage } from "../stack-page/stack-page";
 
-import "./app.css";
+import appStyles from "./app.module.css";
 
 function App() {
   return (
-    <div className="app">
+    <div className={appStyles.app}>
       <BrowserRouter>
         <Switch>
           <Route path="/" exact>
@@ -41,5 +41,7 @@ function App() {
     </div>
   );
 }
+
+// I forgot to mqke a new branch while doing the project
 
 export default App;
