@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { FibonacciPage } from "../fibonacci-page/fibonacci-page";
 import { ListPage } from "../list-page/list-page";
@@ -8,11 +7,11 @@ import { StringComponent } from "../string/string";
 import { SortingPage } from "../sorting-page/sorting-page";
 import { StackPage } from "../stack-page/stack-page";
 
-import appStyles from "./app.module.css";
+import "./app.css";
 
 function App() {
   return (
-    <div className={appStyles.app}>
+    <div className="app">
       <BrowserRouter>
         <Switch>
           <Route path="/" exact>
@@ -41,7 +40,5 @@ function App() {
     </div>
   );
 }
-
-// I forgot to mqke a new branch while doing the project
 
 export default App;

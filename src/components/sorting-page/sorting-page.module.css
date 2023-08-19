@@ -1,0 +1,19 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+  padding-bottom: 48px;
+}
+.sortWrapper {
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+  height: 348px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  list-style: none;
+}

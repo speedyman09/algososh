@@ -1,0 +1,30 @@
+.wrapper {
+  display: flex;
+  align-items: flex-start;
+  max-width: 829px;
+  width: 100%;
+  margin: 0 auto;
+  padding-bottom: 78px;
+}
+.queueWrapper {
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+  
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+}
+.addBtn {
+  width: 121px;
+  min-width: 121px;
+}
+.deleteBtn {
+  width: 108px;
+  min-width: 108px;
+}
+.clearBtn {
+  width: 119px;
+  min-width: 119px;
+}

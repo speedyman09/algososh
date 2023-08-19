@@ -1,116 +1,108 @@
 import React, { ChangeEvent, useState } from "react";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { TElement } from "../../types/element";
 import { ElementStates } from "../../types/element-states";
+import { timeOut } from "../../utils/delay";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { Input } from "../ui/input/input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-
-import styles from "./stack.module.css";
-import { TArray } from "./utils";
-
+import { Stack } from "./class";
+import style from "./stack-page.module.css";
 
 export const StackPage: React.FC = () => {
-  const [valueInput, setValueInput] = useState<string>("");
-  const [array, setArray] = useState<TArray[]>([]);
-  const [Addloading, setAddLoading] = useState(false);
-  const [DelLoading, setDelLoading] = useState(false);
-  const [ClearLoading, setClearLoading] = useState(false);
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValueInput(e.currentTarget.value);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [stack] = useState(new Stack<TElement>());
+  const [renderArr, setRenderArr] = useState<TElement[]>([]);
+  const [loaderAdd, setLoaderAdd] = useState(false);
+  const [loaderDelete, setLoaderDelete] = useState(false);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setInputValue(e.target.value);
+
+  const handleClickPush = async () => {
+    if (inputValue) {
+      setLoaderAdd(true);
+      stack.push({ value: inputValue, color: ElementStates.Changing });
+      setRenderArr([...stack.getContainer()]);
+      setInputValue("");
+      await timeOut(SHORT_DELAY_IN_MS);
+      stack.peak()!.color = ElementStates.Default;
+      setRenderArr([...stack.getContainer()]);
+      setLoaderAdd(false);
+    }
   };
 
-  const clickButtonAdd = () => {
-    setAddLoading(true);
-    const arr = array.concat();
-    arr.push({
-      value: valueInput,
-      color: ElementStates.Modified,
-    });
-
-    setArray(arr);
-
-    setTimeout(() => {
-      console.log(array);
-
-      const newArr = arr.concat();
-      const n = newArr.length - 1;
-
-      newArr[n].color = ElementStates.Default;
-
-      setArray(newArr);
-      setAddLoading(false);
-    }, 500);
-
-    setValueInput("");
-
+  const handleClickPop = async () => {
+    setLoaderDelete(true);
+    stack.peak()!.color = ElementStates.Changing;
+    setRenderArr([...stack.getContainer()]);
+    stack.pop();
+    await timeOut(SHORT_DELAY_IN_MS);
+    setRenderArr([...stack.getContainer()]);
+    setLoaderDelete(false);
   };
 
-  const clickButtonDel = () => {
-    setDelLoading(true);
-    const arr = array.concat();
-    const n = arr.length - 1;
-
-    arr[n].color = ElementStates.Modified;
-
-    setArray(arr);
-
-    setTimeout(() => {
-      const newArr = arr.concat();
-      newArr.pop();
-      setArray(newArr);
-      setDelLoading(false);
-    }, 500);
+  const handleClickClear = () => {
+    stack.clear();
+    setRenderArr([...stack.getContainer()]);
   };
 
-  const clickButtonClear = () => {
-    setClearLoading(true)
-    setArray([]);
-    setClearLoading(false);
+  const getPosition = (index: number, arr: TElement[]): string => {
+    if (index === arr.length - 1) {
+      return "top";
+    } else {
+      return "";
+    }
   };
-
   return (
     <SolutionLayout title="Стек">
-      <div className={styles.stringbox}>
-        <div className={styles.inputbox}>
-          <div className={styles.input}>
-            <Input max={11} onChange={onChange} value={valueInput} isLimitText maxLength={4}></Input>
-          </div>
-          <div>
-            <Button
-              text="Добавить"
-              type="submit"
-              onClick={clickButtonAdd}
-              disabled={valueInput === "" || valueInput.length > 4}
-              isLoader={Addloading}
-            />
-          </div>{" "}
-          <div className={styles.btnDelete}>
-            <Button
-              text="Удалить"
-              type="submit"
-              onClick={clickButtonDel}
-              disabled={array.length == 0}
-              isLoader={DelLoading}
-            />
-          </div>{" "}
-          <div>
-            <Button
-              text="Очистить"
-              type="submit"
-              onClick={clickButtonClear}
-              disabled={array.length == 0}
-              isLoader={ClearLoading}
-            />
-          </div>
-        </div>
-      </div>
+      <div className={style.wrapper}>
+        <Input
+          type="text"
+          isLimitText={true}
+          maxLength={4}
+          value={`${inputValue}`}
+          onChange={handleChange}
+          extraClass="mr-6"
+        />
 
-      <ul className={styles.circles}>
-        {array.map((item, index) => (
-          <li className={styles.circle} key={index}>
-            {index == array.length - 1 && <p>top</p>}
-            <Circle letter={item.value} state={item.color} />
-            <p>{index}</p>
+        <Button
+          type="submit"
+          onClick={handleClickPush}
+          isLoader={loaderAdd}
+          text="Добавить"
+          disabled={loaderDelete || !inputValue}
+          linkedList="small"
+          extraClass={`mr-6 ${style.addBtn}`}
+        />
+        <Button
+          data-cy="remove"
+          onClick={handleClickPop}
+          isLoader={loaderDelete}
+          text="Удалить"
+          disabled={loaderAdd || !renderArr.length}
+          linkedList="small"
+          extraClass={`mr-40 ${style.deleteBtn}`}
+        />
+        <Button
+          type="reset"
+          onClick={handleClickClear}
+          text="Очистить"
+          disabled={loaderDelete || loaderAdd || !renderArr.length}
+          linkedList="small"
+          extraClass={style.clearBtn}
+        />
+      </div>
+      <ul className={style.stackWrapper}>
+        {renderArr.map((item: TElement, index: number) => (
+          <li key={index}>
+            <Circle
+              index={index}
+              letter={item.value}
+              state={item.color}
+              head={getPosition(index, renderArr)}
+            />
           </li>
         ))}
       </ul>

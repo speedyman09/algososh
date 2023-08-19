@@ -1,73 +1,53 @@
 import React, { ChangeEvent, useState } from "react";
-import { ElementStates } from "../../types/element-states";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { timeOut } from "../../utils/delay";
 import { Button } from "../ui/button/button";
 import { Circle } from "../ui/circle/circle";
 import { Input } from "../ui/input/input";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { fibonacciNumbers } from "./algorithm";
-
-import styles from "./fibonacci-page.module.css";
+import style from "./fibonacci-page.module.css";
+import { getFibonacciNumbers } from "./utils";
 
 export const FibonacciPage: React.FC = () => {
-  const [valueInput, setValueInput] = useState<number | string>("");
-  const [arrayFibonacci, setArrayFibonacci] = useState<Array<number>>([]);
-  const [loading, setLoading] = useState(false);
-  const changeArrayFibonacci = (number: number) => {
-    setLoading(true)
-    let arr = fibonacciNumbers(number);
+  const [numberInput, setNumberInput] = useState<number | string>("");
+  const [renderArr, setRenderArr] = useState<number[]>([]);
+  const [loader, setLoader] = useState(false);
 
-    let i = 0;
-    const newArr: number[] = [];
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setNumberInput(Number(e.target.value));
 
-    const interval = setInterval(() => {
-      newArr.push(arr[i]);
-      setArrayFibonacci(newArr.concat());
-
-      if (i < arr.length - 1) {
-        i++;
-      } else {
-        clearInterval(interval);
-        setLoading(false);
-      }
-    }, 500)
-    
-  };
-
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValueInput(e.currentTarget.value);
-  };
-
-  const clickButton = () => {
-    const numberInput = Number(valueInput);
-    setLoading(true);
-    setValueInput("");
-
-    setTimeout(() => changeArrayFibonacci(numberInput), 500);
-    
+  const handleClick = async () => {
+    const arr = getFibonacciNumbers(numberInput as number);
+    setLoader(true);
+    for (let i = 0; i < arr.length; i++) {
+      await timeOut(SHORT_DELAY_IN_MS);
+      setRenderArr(arr.slice(0, i + 1));
+    }
+    setLoader(false);
   };
   return (
     <SolutionLayout title="Последовательность Фибоначчи">
-      <div className={styles.stringbox}>
-        <div className={styles.inputbox}>
-          <div className={styles.input}>
-            <Input max={11} onChange={onChange} value={valueInput}></Input>
-          </div>
-          <Button
-            text="Рассчитать"
-            type="submit"
-            onClick={clickButton}
-            disabled={valueInput === "" || valueInput > 19}
-            isLoader={loading}
-          />
-        </div>
-        Максимальное число — 19
+      <div className={style.wrapper}>
+        <Input
+          type="number"
+          isLimitText={true}
+          max={19}
+          onChange={handleChange}
+          value={numberInput}
+        />
+        <Button
+          type="submit"
+          onClick={handleClick}
+          isLoader={loader}
+          text="Рассчитать"
+          disabled={numberInput! <= 19 && numberInput! >= 1 ? false : true}
+          linkedList="small"
+        />
       </div>
-
-      <ul className={styles.circles}>
-        {arrayFibonacci.map((item, index) => (
-          <li className={styles.circle} key={index}>
-            <Circle letter={item.toString()} state={ElementStates.Default} />
-            <p>{index}</p>
+      <ul className={style.numbersWrapper}>
+        {renderArr.map((n: number, index: number) => (
+          <li key={index}>
+            <Circle letter={`${n}`} index={index} />
           </li>
         ))}
       </ul>
